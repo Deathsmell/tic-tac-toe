@@ -9,7 +9,7 @@ const commonPath = (dir) => {
 }
 
 module.exports = {
-    entry: ['@babel/polyfill',commonPath(['index.tsx'])],
+    entry: ['@babel/polyfill', commonPath(['index.tsx'])],
     module: {
         rules: [
 
