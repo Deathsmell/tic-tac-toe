@@ -1,0 +1,17 @@
+logging:
+  level:
+    by.deathsmell: debug
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: ${POSTGRES_URL:"jdbc:postgresql://localhost:5432/tictactoe" }
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: true

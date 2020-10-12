@@ -39,3 +39,8 @@ out/
 Будет удалено gradlew.bat
 Будет удалено settings.gradle
 Будет удалено src/
+
+
+### Js ###
+node_modules
+yarn.lock
