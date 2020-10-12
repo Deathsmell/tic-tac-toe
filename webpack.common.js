@@ -9,12 +9,12 @@ const commonPath = (dir) => {
 }
 
 module.exports = {
-    entry: ['@babel/polyfill',commonPath(['index.js'])],
+    entry: ['@babel/polyfill',commonPath(['index.tsx'])],
     module: {
         rules: [
 
             {
-                test: /\.js$/,
+                test: /\.(ts|js)x?$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: "babel-loader",
             },
@@ -31,6 +31,7 @@ module.exports = {
 
     plugins: [],
     resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.json'],
         modules: [
             commonPath(),
             path.join(__dirname, 'node_modules'),
