@@ -1,9 +1,6 @@
 import React from 'react'
-import { useAlert } from 'react-alert'
 
 export default () => {
-
-    const alert = useAlert();
 
     return (
         <div className="row justify-content-center h-100">
@@ -25,9 +22,6 @@ export default () => {
                     <div className="row justify-content-around">
                         <a href="#"
                            className="col-5 btn btn-primary btn-lg"
-                           onClick={() => {
-                               alert.show('Oh look, an alert!',{type: "info"})
-                           }}
                         >Sign in</a>
                         <a href="#"
                            className="col-5 btn btn-secondary btn-lg"

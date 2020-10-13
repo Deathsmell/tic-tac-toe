@@ -9,18 +9,23 @@ const commonPath = (dir) => {
 }
 
 module.exports = {
-    entry: ['@babel/polyfill', commonPath(['index.tsx'])],
+    entry: ['@babel/polyfill', commonPath(['index.jsx'])],
     module: {
         rules: [
 
             {
-                test: /\.(ts|js)x?$/,
+                test: /\.js(x?)$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: "babel-loader",
             },
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(scss)$/,
+                use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
@@ -31,7 +36,7 @@ module.exports = {
 
     plugins: [],
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.json'],
+        extensions: ['.jsx', '.js', '.json'],
         modules: [
             commonPath(),
             path.join(__dirname, 'node_modules'),
