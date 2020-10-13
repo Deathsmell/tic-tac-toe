@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default () => {
-
     return (
         <div className="row justify-content-center h-100">
             <div className="card col-xl-5 col-lg-7 col-md-9 col-sm-11 align-self-center shadow-lg ">
