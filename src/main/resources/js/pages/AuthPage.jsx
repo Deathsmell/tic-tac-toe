@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
-import useHttp from "../hooks/http.hook";
+import React, {useContext, useState} from 'react'
+import {AuthContext} from "../context/auth/AuthContext";
 
-export default () => {
+const AuthPage = () => {
 
-    const {request} = useHttp();
+    const {isAuthenticated,login,registration} = useContext(AuthContext);
 
     const [form, setForm] = useState({
         username: '',
@@ -16,16 +16,12 @@ export default () => {
 
     const registrationHandler = async (e) => {
         e.preventDefault()
-        const response = await request('/registration', 'post', form)
-        console.log(response.data)
+        await registration(form)
     }
 
     const loginHandler = async (e) => {
         e.preventDefault()
-        let formData = new FormData;
-        formData.set('username',form.username)
-        formData.set('password',form.password)
-        await request('/login', 'post', formData)
+        await login(form)
     }
 
 
@@ -33,7 +29,7 @@ export default () => {
         <div className="row justify-content-center h-100">
             <div className="card col-xl-5 col-lg-7 col-md-9 col-sm-11 align-self-center shadow-lg">
                 <div className="card-body col-12 justify-content-center">
-                    <h3 className="card-title text-center">Authorization</h3>
+                    <h3 className="card-title text-center">Authorization {isAuthenticated.toString()}</h3>
                     <form>
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
@@ -71,3 +67,5 @@ export default () => {
 
     )
 }
+
+export default AuthPage

@@ -18,12 +18,12 @@ const useHttp = () => {
             });
 
             if (response.status === 200) {
-                console.log("OK", response.data.message || "Success")
+                console.log(response.data.message || "Success")
             } else {
-                console.error("Not OK", response.data.message)
+                console.error(response.status, "body", response.data)
             }
             setLoading(false)
-
+            return response
         } catch (e) {
             const errorMessage = e.response.data.message;
             setError(errorMessage)

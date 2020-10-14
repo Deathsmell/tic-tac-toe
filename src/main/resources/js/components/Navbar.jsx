@@ -1,13 +1,14 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {IoIosLogOut} from 'react-icons/io'
 
 const Navbar = () => {
+
 
     return (
         <nav className="d-flex row navbar navbar-dark bg-primary">
             <a className="navbar-brand">Tic Tac Toe</a>
             <a className="nav-link"
-               href="#"
+               href="/logout"
             >
                 <IoIosLogOut size={"30px"}
                              color={"white"}
