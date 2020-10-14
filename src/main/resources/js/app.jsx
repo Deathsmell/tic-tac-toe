@@ -16,9 +16,9 @@ export default () => {
                     <Alert/>
                     <div className="container pt-5 ">
                         <Switch>
-                            <Route path={"/"} component={Room}/>
-                            {/*<Route path={"/"} component={RoomsList}/>*/}
-                            {/*<Route path={"/"} component={AuthPage}/>*/}
+                            <Route path={"/room:id"} component={Room}/>
+                            <Route path={"/list"} component={RoomsList}/>
+                            <Route path={"/login"} component={AuthPage}/>
                         </Switch>
                     </div>
                 </div>

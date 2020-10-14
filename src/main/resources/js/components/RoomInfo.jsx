@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 
-const RoomInfo = ({board}) =>{
+const RoomInfo = ({board}) => {
 
     const [gameStatus, setGameStatus] = useState(true);
 
@@ -12,7 +12,7 @@ const RoomInfo = ({board}) =>{
     }, [board])
 
 
-    return(
+    return (
         <div>
             Host: Alex
             <br/>
