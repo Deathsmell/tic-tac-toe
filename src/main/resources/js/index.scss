@@ -43,3 +43,29 @@ div.alert {
   position: absolute;
   z-index: 1;
 }
+
+div.cell {
+  background-color: blue;
+  width: 90px;
+  height: 90px;
+  @include media-breakpoint-up(sm) {
+    background-color: green;
+    width: 120px;
+    height: 120px;
+  }
+  @include media-breakpoint-up(md) {
+    background-color: red;
+    width: 150px;
+    height: 150px;
+  }
+  @include media-breakpoint-up(lg) {
+    background-color: yellow;
+    width: 180px;
+    height: 180px;
+  }
+  @include media-breakpoint-up(xl) {
+    background-color: cyan;
+    width: 180px;
+    height: 180px;
+  }
+}

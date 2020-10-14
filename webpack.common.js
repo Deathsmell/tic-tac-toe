@@ -36,7 +36,6 @@ module.exports = {
 
     plugins: [],
     resolve: {
-        extensions: ['.jsx', '.js', '.json'],
         modules: [
             commonPath(),
             path.join(__dirname, 'node_modules'),
