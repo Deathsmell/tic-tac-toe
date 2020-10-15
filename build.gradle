@@ -30,6 +30,7 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile 'com.alibaba:fastjson:1.2.73'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

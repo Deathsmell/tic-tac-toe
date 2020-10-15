@@ -7,7 +7,7 @@ const useHttp = () => {
 
     const request = useCallback(async (url, method = 'get', data = null, headers = {}) => {
         setLoading(true)
-
+        let resultMessage = {status: 0, message: ''}
         try {
             const response = await axios({
                 method,
@@ -16,18 +16,14 @@ const useHttp = () => {
                 baseUrl: 'http://localhost:8080',
                 headers,
             });
-
-            if (response.status === 200) {
-                console.log(response.data.message || "Success")
-            } else {
-                console.error(response.status, "body", response.data)
-            }
             setLoading(false)
-            return response
+            resultMessage.status = response.status
+            resultMessage.message = response.data.message || 'success actions'
+            return resultMessage
         } catch (e) {
-            const errorMessage = e.response.data.message;
-            setError(errorMessage)
-            console.error('Error response:', errorMessage)
+            resultMessage.status = e.response.status
+            resultMessage.message = e.response.data.message
+            return resultMessage
         }
 
     }, [])

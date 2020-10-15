@@ -1,9 +1,11 @@
 import React, {useContext, useState} from 'react'
 import {AuthContext} from "../context/auth/AuthContext";
+import {AlertContext} from "../context/alert/AlertContext";
 
 const AuthPage = () => {
 
     const {isAuthenticated,login,registration} = useContext(AuthContext);
+    const alert = useContext(AlertContext);
 
     const [form, setForm] = useState({
         username: '',
@@ -16,18 +18,23 @@ const AuthPage = () => {
 
     const registrationHandler = async (e) => {
         e.preventDefault()
-        await registration(form)
+        const {message,status} = await registration(form);
+        const statusType = alert.statusType(status);
+        alert.show(message,statusType)
     }
 
     const loginHandler = async (e) => {
         e.preventDefault()
-        await login(form)
+        const {message,status} = await login(form);
+        const statusType = alert.statusType(status);
+        alert.show(message,statusType)
     }
 
 
+    const colSized = "col-xl-5 col-lg-7 col-md-9 col-sm-11"
     return (
-        <div className="row justify-content-center h-100">
-            <div className="card col-xl-5 col-lg-7 col-md-9 col-sm-11 align-self-center shadow-lg">
+        <div className="row justify-content-center">
+            <div className={`card card-auth ${colSized} ${marginTop} shadow-lg`}>
                 <div className="card-body col-12 justify-content-center">
                     <h3 className="card-title text-center">Authorization {isAuthenticated.toString()}</h3>
                     <form>

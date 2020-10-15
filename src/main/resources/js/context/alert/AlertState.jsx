@@ -15,10 +15,20 @@ export const AlertState = ({children}) => {
 
     const hide = () => dispatch({type: HIDE_ALERT})
 
+    const statusType = status => {
+        if (status < 100) return 'info'
+        if (status < 200) return 'success'
+        if (status < 300) return 'success'
+        if (status < 400) return 'warning'
+        if (status < 500) return 'danger'
+    }
+
     return (
         <AlertContext.Provider value={{
-            show, hide,
-            alert: state
+            show,
+            hide,
+            alert: state,
+            statusType
         }}>
             {children}
         </AlertContext.Provider>

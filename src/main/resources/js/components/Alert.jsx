@@ -19,7 +19,7 @@ export const Alert = () => {
         >
             <div className="row justify-content-center">
                 <div className={`${col} alert alert-${alert.type || 'warning'} alert-dismissible`}>
-                    <strong>Внимание!</strong>
+                    <strong>{alert.type && alert.type.toUpperCase() || ''}!</strong>
                     &nbsp;{alert.text}
                     <button onClick={hide} type="button" className="close" aria-label="Close">
                         <span aria-hidden="true">&times;</span>

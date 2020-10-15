@@ -1,16 +1,19 @@
 package by.deathsmell.tictactoe.configuration;
 
+import by.deathsmell.tictactoe.domain.dto.ResponseMessage;
 import by.deathsmell.tictactoe.service.UserManager;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 
 @Slf4j
@@ -18,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserManager userManager;
-    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -26,9 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public WebSecurityConfig(UserManager userManager,@Lazy PasswordEncoder passwordEncoder) {
+    public WebSecurityConfig(UserManager userManager) {
         this.userManager = userManager;
-        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -45,11 +46,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                     .authenticated()
                 .and()
-                .formLogin()
+                    .formLogin()
+                        .successHandler(successHandler())
+                        .failureHandler(failureHandler())
                     .loginPage("/login")
                     .permitAll()
                 .and()
-                .logout()
+                    .logout()
                     .permitAll();
     }
 
@@ -57,6 +60,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userManager)
-                .passwordEncoder(passwordEncoder);
+                .passwordEncoder(passwordEncoder());
+    }
+
+
+    private AuthenticationSuccessHandler successHandler() {
+        return (httpServletRequest, httpServletResponse, authentication) -> {
+            String responseMassage = JSONObject.toJSONString(new ResponseMessage("Successful authentication"));
+            httpServletResponse.getWriter().append(responseMassage);
+            httpServletResponse.setContentType("application/json");
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setStatus(200);
+        };
+    }
+
+    private AuthenticationFailureHandler failureHandler(){
+        return (httpServletRequest, httpServletResponse, authentication) -> {
+            String responseMassage = JSONObject.toJSONString(new ResponseMessage("Username or password not valid"));
+            httpServletResponse.getWriter().append(responseMassage);
+            httpServletResponse.setContentType("application/json");
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setStatus(401);
+        };
     }
 }

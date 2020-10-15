@@ -8,12 +8,12 @@ import {AlertState} from "./context/alert/AlertState";
 import {AuthContext} from "./context/auth/AuthContext";
 
 export default () => {
-    const {isAuthenticated, logout, login,registration} = useAuth();
+    const {isAuthenticated, logout, login, registration} = useAuth();
     const routes = useRoutes(isAuthenticated);
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, logout,registration}}>
-            <AlertState>
+        <AlertState>
+            <AuthContext.Provider value={{isAuthenticated, login, logout, registration}}>
                 <BrowserRouter>
                     {isAuthenticated && <Navbar/>}
                     <div className="container pt-4">
@@ -23,8 +23,8 @@ export default () => {
                         </div>
                     </div>
                 </BrowserRouter>
-            </AlertState>
-        </AuthContext.Provider>
+            </AuthContext.Provider>
+        </AlertState>
 
     )
 }

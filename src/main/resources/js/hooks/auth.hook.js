@@ -4,6 +4,7 @@ import useHttp from "./http.hook";
 
 export const useAuth = () => {
 
+
     const {request} = useHttp()
     const [isAuthenticated, setAuthenticate] = useState(false)
 
@@ -17,12 +18,16 @@ export const useAuth = () => {
         }
     }, [isAuthenticated])
 
+
     const login = useCallback(async ({username, password}) => {
         let formData = new FormData;
         formData.set('username', username)
         formData.set('password', password)
         const response = await request('/login', 'post', formData)
-        setAuthenticate(() => response.status === 200)
+        if (response && response.status === 200) {
+            setAuthenticate(true)
+        }
+        return response
     }, [])
 
     const logout = useCallback(async () => {
@@ -31,7 +36,8 @@ export const useAuth = () => {
     }, [])
 
     const registration = useCallback(async ({username, password}) => {
-        await request('/registration', 'post', {username, password})
+        const response = await request('/registration', 'post', {username, password})
+        return response
     }, [])
 
     return {registration, login, logout, isAuthenticated}
