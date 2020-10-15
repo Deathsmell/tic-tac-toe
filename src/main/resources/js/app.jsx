@@ -16,9 +16,9 @@ export default () => {
             <AuthContext.Provider value={{isAuthenticated, login, logout, registration}}>
                 <BrowserRouter>
                     {isAuthenticated && <Navbar/>}
-                    <div className="container pt-4">
+                    <div className={isAuthenticated ? "container pt-4" : "h-100"}>
                         <Alert/>
-                        <div className="container pt-5 ">
+                        <div className={isAuthenticated ? "container pt-5" : "h-100"}>
                             {routes}
                         </div>
                     </div>

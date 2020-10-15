@@ -4,7 +4,7 @@ import {AlertContext} from "../context/alert/AlertContext";
 
 const AuthPage = () => {
 
-    const {isAuthenticated,login,registration} = useContext(AuthContext);
+    const {login,registration} = useContext(AuthContext);
     const alert = useContext(AlertContext);
 
     const [form, setForm] = useState({
@@ -30,13 +30,12 @@ const AuthPage = () => {
         alert.show(message,statusType)
     }
 
-
     const colSized = "col-xl-5 col-lg-7 col-md-9 col-sm-11"
     return (
-        <div className="row justify-content-center">
-            <div className={`card card-auth ${colSized} ${marginTop} shadow-lg`}>
+        <div className="card-auth h-100 row justify-content-center">
+            <div className={`card ${colSized} align-self-center shadow-lg`}>
                 <div className="card-body col-12 justify-content-center">
-                    <h3 className="card-title text-center">Authorization {isAuthenticated.toString()}</h3>
+                    <h3 className="card-title text-center">Authorization</h3>
                     <form>
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
