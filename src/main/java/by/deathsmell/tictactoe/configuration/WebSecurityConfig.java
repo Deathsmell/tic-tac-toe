@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -70,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             httpServletResponse.getWriter().append(responseMassage);
             httpServletResponse.setContentType("application/json");
             httpServletResponse.setCharacterEncoding("UTF-8");
-            httpServletResponse.setStatus(200);
+            httpServletResponse.setStatus(HttpStatus.OK.value());
         };
     }
 
@@ -80,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             httpServletResponse.getWriter().append(responseMassage);
             httpServletResponse.setContentType("application/json");
             httpServletResponse.setCharacterEncoding("UTF-8");
-            httpServletResponse.setStatus(401);
+            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         };
     }
 }
