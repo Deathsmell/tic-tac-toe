@@ -25,6 +25,7 @@ const AuthPage = () => {
 
     const loginHandler = async (e) => {
         e.preventDefault()
+        localStorage.setItem("username",form.username)
         const {message,status} = await login(form);
         const statusType = alert.statusType(status);
         alert.show(message,statusType)

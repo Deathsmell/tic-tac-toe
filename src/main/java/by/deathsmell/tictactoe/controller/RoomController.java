@@ -3,11 +3,13 @@ package by.deathsmell.tictactoe.controller;
 
 import by.deathsmell.tictactoe.domain.Room;
 import by.deathsmell.tictactoe.domain.User;
+import by.deathsmell.tictactoe.domain.dto.ResponseMessage;
 import by.deathsmell.tictactoe.exception.EmptySenderNameSpaceException;
 import by.deathsmell.tictactoe.exception.IllegalRoomStateException;
 import by.deathsmell.tictactoe.exception.IncorrectStatusOfTheCreatedRoomException;
 import by.deathsmell.tictactoe.repository.RoomRepository;
 import by.deathsmell.tictactoe.service.RoomCreator;
+import by.deathsmell.tictactoe.service.RoomManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,15 +27,17 @@ public class RoomController {
 
     private final RoomRepository roomRepo;
     private final RoomCreator roomCreator;
+    private final RoomManager roomManager;
 
 
     @Autowired
-    public RoomController(RoomRepository roomRepo, RoomCreator roomCreator) {
+    public RoomController(RoomRepository roomRepo, RoomCreator roomCreator, RoomManager roomManager) {
         this.roomRepo = roomRepo;
         this.roomCreator = roomCreator;
+        this.roomManager = roomManager;
     }
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public Room createRoom() {
         return roomCreator.createRoom();
     }
@@ -53,12 +57,12 @@ public class RoomController {
         return roomRepo.findByUuid(uuid);
     }
 
-    @GetMapping("/join")
-    public ResponseEntity<String> joinToRoom(@AuthenticationPrincipal User user,
-                                             @RequestParam UUID room) {
-        log.debug("START JOINING IN ROOM " + room);
+    @PostMapping("/join")
+    public ResponseEntity<ResponseMessage> joinToRoom(@AuthenticationPrincipal User user,
+                                                      @RequestParam UUID uuid) {
+        log.debug("START JOINING IN ROOM " + uuid);
         try {
-            roomCreator.joinToRoom(room, user);
+            roomManager.joinToRoom(uuid, user);
         } catch (IncorrectStatusOfTheCreatedRoomException |
                 IllegalArgumentException |
                 IllegalRoomStateException |
@@ -66,18 +70,10 @@ public class RoomController {
             e.printStackTrace();
             return ResponseEntity
                     .status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(e.getMessage());
+                    .body(new ResponseMessage(e.getMessage()));
         }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("Success! Enjoying game");
-    }
-
-    // FIXME: Name method dont right. Create get method
-    @PutMapping
-    public Room updateRoom(@RequestBody Room room) {
-        Room roomFromDb = roomRepo.findByUuid(room.getUuid());
-        log.debug("Update room : {}", roomFromDb);
-        return roomFromDb;
+                .body(new ResponseMessage("Successful joined. Enjoy!"));
     }
 }

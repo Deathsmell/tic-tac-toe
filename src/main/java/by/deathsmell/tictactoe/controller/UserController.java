@@ -58,9 +58,8 @@ public class UserController {
     }
 
     @GetMapping("/auth")
-    public boolean checkAuth(@AuthenticationPrincipal User user){
-        System.out.println(user);
-        return user != null;
+    public String checkAuth(@AuthenticationPrincipal User user){
+        return user.getUsername();
     }
 
 }

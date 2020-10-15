@@ -13,6 +13,7 @@ export const useAuth = () => {
             request('/auth')
                 .then(res => {
                     res && res.status === 200 && setAuthenticate(true)
+                    localStorage.setItem("username",res.body)
                 })
                 .catch(console.error)
         }

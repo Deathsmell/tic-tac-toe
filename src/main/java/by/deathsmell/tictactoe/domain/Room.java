@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -37,6 +38,9 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
+    @OneToMany
+    List<RoomTag> roomTags;
+
     public enum RoomStatus {
         CREATED, WAITING, GAMING, DELETING,FILED
     }
@@ -56,6 +60,7 @@ public class Room {
         private User opponent;
         private RoomStatus status;
         private LocalDateTime createdAt;
+        private List<RoomTag> roomTags;
 
         public RoomBuilder id(Long id) {
             this.id = id;
@@ -92,8 +97,13 @@ public class Room {
             return this;
         }
 
+        public RoomBuilder tags(List<RoomTag> roomTags){
+            this.roomTags = roomTags;
+            return this;
+        }
+
         public Room build(){
-            return new Room(id, uuid,host,opponent,createdAt,status);
+            return new Room(id, uuid,host,opponent,createdAt,status,roomTags);
         }
     }
 

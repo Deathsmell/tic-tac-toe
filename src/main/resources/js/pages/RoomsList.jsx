@@ -1,36 +1,51 @@
-import React from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import RoomCard from "../components/RoomCard";
+import useHttp from "../hooks/http.hook";
+import {AlertContext} from "../context/alert/AlertContext";
 
 const RoomsList = () => {
-    const imge = 'https://avatars.mds.yandex.net/get-pdb/1604805/b3aaa7cc-89cc-4319-951f-d767ed1570cc/s1200'
 
+    const alert = useContext(AlertContext);
+    const {request} = useHttp();
+    const [rooms, setRooms] = useState([]);
 
+    const showAlert = ({status, message}) => alert.show(message, alert.statusType(status))
 
-    const rooms = [
-        {host: 'Alex', status: 'waiting', tags: ['fast', 'one game', 'cool time'], img: imge},
-        {host: 'Maks', status: 'waiting', tags: ['fast', 'one game', 'cool time']},
-        {host: 'German', status: 'waiting', tags: ['fast', 'one game', 'cool time']},
-        {host: 'Voha', status: 'waiting', tags: ['fast', 'one game', 'cool time','cool time','cool time','cool time',
-                'cool time','cool time','cool time','cool time']},
-        {host: 'German', status: 'waiting', tags: ['fast', 'one game', 'cool time']},
-        {host: 'German', status: 'waiting', tags: ['fast', 'one game', 'cool time']},
-        {host: 'German', status: 'waiting', tags: ['fast', 'one game', 'cool time']},
-        {host: 'German', status: 'waiting', tags: ['fast', 'one game', 'cool time']},
-    ]
+    const createHandler = async (e) => {
+        e.preventDefault()
+        const {body} = await request('/room/create', 'post');
+        setRooms([...rooms,body])
+    }
+
+    useEffect(() => {
+        request('/room/allRooms')
+            .then((response) => {
+                !response.body ? showAlert(response) : setRooms([...response.body])
+            })
+            .catch(showAlert)
+    }, [])
 
     return (
         <div className="container-fluid">
             <div className="row justify-content-center">
-                {rooms.map(({host, status, tags,img},index) => {
+                <button className="btn btn-large btn-secondary"
+                        onClick={createHandler}
+                >Create room</button>
+            </div>
+            <div className="row justify-content-center">
+                {rooms.map(({id, uuid, host, opponent, tags, createdAt, status, img}, index) => {
                     return (
                         <div className="col-lg-4 col-md-12 col-sm-12 p-3"
                              key={index}
                         >
                             <RoomCard
+                                roomId={id}
+                                uuid={uuid}
                                 host={host}
+                                opponent={opponent}
                                 tags={tags}
-                                roomId={1}
-                                lastUpdate={"3 min aho"}
+                                createdAt={createdAt}
+                                status={status}
                                 img={img}
                             />
                         </div>

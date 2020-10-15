@@ -8,7 +8,7 @@ export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
         return (
             <Switch>
-                <Route path={"/room"} component={Room}/>
+                <Route path={"/game/:uuid"} component={Room}/>
                 <Route path={"/list"} component={RoomsList}/>
                 <Route path="/">
                     <Redirect to="/list"/>
