@@ -1,11 +1,12 @@
 package by.deathsmell.tictactoe.configuration;
 
 import by.deathsmell.tictactoe.domain.dto.ResponseMessage;
-import by.deathsmell.tictactoe.service.UserManager;
+import by.deathsmell.tictactoe.service.user.UserManager;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public WebSecurityConfig(UserManager userManager) {
+    public WebSecurityConfig(@Lazy UserManager userManager) {
         this.userManager = userManager;
     }
 

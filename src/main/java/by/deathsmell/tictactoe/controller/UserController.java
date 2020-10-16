@@ -5,7 +5,7 @@ import by.deathsmell.tictactoe.domain.dto.CredentialRequest;
 import by.deathsmell.tictactoe.domain.dto.ResponseMessage;
 import by.deathsmell.tictactoe.exception.UserExistException;
 import by.deathsmell.tictactoe.repository.UserRepository;
-import by.deathsmell.tictactoe.service.UserManager;
+import by.deathsmell.tictactoe.service.user.UserManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

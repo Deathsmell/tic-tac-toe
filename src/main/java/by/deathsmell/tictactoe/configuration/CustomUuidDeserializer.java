@@ -12,7 +12,6 @@ import java.util.UUID;
 @Slf4j
 @JsonComponent
 public class CustomUuidDeserializer extends JsonDeserializer<UUID> {
-
     @Override
     public UUID deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String uuid = p.getValueAsString();

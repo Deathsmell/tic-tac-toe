@@ -15,4 +15,5 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     Room findRoomByHostOrOpponent(@Param("username") String username);
 
     List<Room> findAllByHostNotNullOrOpponentNotNull();
+
 }

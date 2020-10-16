@@ -1,7 +1,9 @@
 import React from 'react'
 import BoardCell from "./BoardCell";
 
-const BoardRow = ({row, index,board}) => {
+const BoardRow = ({row, index}) => {
+
+
 
     return (
         <div className="row no-gutters"
@@ -13,7 +15,6 @@ const BoardRow = ({row, index,board}) => {
                         indexRow={index}
                         indexCell={indexCell}
                         cell={cell}
-                        boardState={board}
                     />
                 )
             })}

@@ -1,4 +1,4 @@
-package by.deathsmell.tictactoe.service;
+package by.deathsmell.tictactoe.service.room;
 
 import by.deathsmell.tictactoe.domain.Room;
 import by.deathsmell.tictactoe.domain.User;
@@ -85,7 +85,7 @@ public class RoomService implements RoomCreator,RoomManager {
             throws IncorrectStatusOfTheCreatedRoomException {
         if (null == roomFromDb.getOpponent()) {
             roomFromDb.setOpponent(sender);
-            roomFromDb.setStatus(Room.RoomStatus.FILED);
+            roomFromDb.setStatus(Room.RoomStatus.GAMING);
             roomRepo.save(roomFromDb);
         } else {
             log.error("Incorrect status of the create room." +

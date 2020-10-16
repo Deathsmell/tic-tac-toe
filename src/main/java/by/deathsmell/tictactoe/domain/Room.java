@@ -38,6 +38,8 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
+    private String hash;
+
     @OneToMany
     List<RoomTag> roomTags;
 
@@ -61,6 +63,7 @@ public class Room {
         private RoomStatus status;
         private LocalDateTime createdAt;
         private List<RoomTag> roomTags;
+        private String hash;
 
         public RoomBuilder id(Long id) {
             this.id = id;
@@ -102,8 +105,13 @@ public class Room {
             return this;
         }
 
+        public RoomBuilder hash(String hash){
+            this.hash = hash;
+            return this;
+        }
+
         public Room build(){
-            return new Room(id, uuid,host,opponent,createdAt,status,roomTags);
+            return new Room(id, uuid,host,opponent,createdAt,status,hash,roomTags);
         }
     }
 

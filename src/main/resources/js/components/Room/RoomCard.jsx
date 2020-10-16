@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react'
-import useHttp from "../hooks/http.hook";
+import useHttp from "../../hooks/http.hook";
 import {Redirect} from "react-router-dom"
-import {AlertContext} from "../context/alert/AlertContext";
+import {AlertContext} from "../../context/alert/AlertContext";
 
 const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) => {
 

@@ -7,6 +7,7 @@ export const useAuth = () => {
 
     const {request} = useHttp()
     const [isAuthenticated, setAuthenticate] = useState(false)
+    const [username, setUsername] = useState('')
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -14,6 +15,7 @@ export const useAuth = () => {
                 .then(res => {
                     res && res.status === 200 && setAuthenticate(true)
                     localStorage.setItem("username",res.body)
+                    setUsername(username)
                 })
                 .catch(console.error)
         }
@@ -27,6 +29,8 @@ export const useAuth = () => {
         const response = await request('/login', 'post', formData)
         if (response && response.status === 200) {
             setAuthenticate(true)
+            localStorage.setItem('username',username)
+            setUsername(username)
         }
         return response
     }, [])
@@ -41,6 +45,6 @@ export const useAuth = () => {
         return response
     }, [])
 
-    return {registration, login, logout, isAuthenticated}
+    return {username,registration, login, logout, isAuthenticated}
 
 }

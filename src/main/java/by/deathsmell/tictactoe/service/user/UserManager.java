@@ -1,4 +1,4 @@
-package by.deathsmell.tictactoe.service;
+package by.deathsmell.tictactoe.service.user;
 
 import by.deathsmell.tictactoe.domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;

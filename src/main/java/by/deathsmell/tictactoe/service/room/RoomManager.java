@@ -1,4 +1,4 @@
-package by.deathsmell.tictactoe.service;
+package by.deathsmell.tictactoe.service.room;
 
 import by.deathsmell.tictactoe.domain.User;
 import by.deathsmell.tictactoe.exception.EmptySenderNameSpaceException;

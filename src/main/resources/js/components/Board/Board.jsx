@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import BoardRow from "./BoardRow";
+import {RoomContext} from "../../context/room/RoomContext";
 
 
-const Board = ({board, boardState}) => {
+const Board = () => {
+
+    const {board} = useContext(RoomContext);
+
     return (
         <div className="justify-content-center">
             {
@@ -11,7 +15,6 @@ const Board = ({board, boardState}) => {
                             <BoardRow key={`${index}-row`}
                                       row={row}
                                       index={index}
-                                      board={boardState}
                             />
                         )
                     }

@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
+import {RoomContext} from "../../context/room/RoomContext";
 
 const RoomInfo = ({board}) => {
 
     const [gameStatus, setGameStatus] = useState(true);
+    const {hash} = useContext(RoomContext);
 
     useEffect(() => {
         board.forEach(row => {
@@ -14,6 +16,8 @@ const RoomInfo = ({board}) => {
 
     return (
         <div>
+            Hash: {hash}
+            <br/>
             Host: Alex
             <br/>
             Opponent: Garfield

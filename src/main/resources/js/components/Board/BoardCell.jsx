@@ -1,32 +1,32 @@
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
 import {FaRegCircle} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
+import useHttp from "../../hooks/http.hook";
+import {RoomContext} from "../../context/room/RoomContext";
 
-const BoardCell = ({indexRow, cell, indexCell, boardState}) => {
+const BoardCell = ({indexRow, cell, indexCell}) => {
 
     const defaultCellClass = "d-flex border-dark justify-content-center cell border"
-    const cross = <FaRegCircle className="align-self-center" size="100px"/>
-    const circle = <ImCross className="align-self-center" size="100px"/>
+    const cross = <FaRegCircle className="align-self-center" size="100px" row={indexRow} cell={indexCell}/>
+    const circle = <ImCross className="align-self-center" size="100px" row={indexRow} cell={indexCell}/>
 
-    const [board,setBoard] = boardState
+    const {request} = useHttp();
+    const {board, hash,uuid} = useContext(RoomContext);
 
-    const cellHandler = (e) => {
+    const cellHandler =  (e) => {
         e.preventDefault()
-        const targetIndexRow = e.target.getAttribute('row');
-        const targetIndexCell = e.target.getAttribute('cell');
-        const newBoard = board.map((row, indexRow) => {
-            return indexRow.toString() === targetIndexRow
-                ? row.map((cell, indexCell) => {
-                    const rand = Math.round(0 - 0.5 + Math.random() * (2 + 1));
-                    console.log(rand)
-                    return indexCell.toString() === targetIndexCell
-                        ? rand
-                        : cell
-                })
-                : row
-        })
-        setBoard(newBoard)
+        const x = e.target.getAttribute('row');
+        const y = e.target.getAttribute('cell');
+        const GameMessageRequest = {board, hash, x, y}
+        console.log(GameMessageRequest)
+        request(
+            '/room/'+uuid,
+            'post',
+            GameMessageRequest,
+            null,
+        );
     }
+
 
     return (
         <div className={defaultCellClass}
@@ -35,10 +35,7 @@ const BoardCell = ({indexRow, cell, indexCell, boardState}) => {
              onClick={cellHandler}
         >
             {
-                cell ? cell === 1
-                    ? cross
-                    : circle
-                    : ''
+                cell ? cell === 3 ? cross : circle : ''
             }
         </div>
     )

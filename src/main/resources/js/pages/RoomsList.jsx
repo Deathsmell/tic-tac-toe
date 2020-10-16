@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import RoomCard from "../components/RoomCard";
+import RoomCard from "../components/Room/RoomCard";
 import useHttp from "../hooks/http.hook";
 import {AlertContext} from "../context/alert/AlertContext";
 
@@ -49,7 +49,6 @@ const RoomsList = () => {
                                 img={img}
                             />
                         </div>
-
                     )
                 })}
             </div>
