@@ -16,7 +16,6 @@ const Room = ({location}) => {
 
     const boardHandler = ({body}) => {
         const content = JSON.parse(body)
-        console.log(content.board, "change")
         if (content) {
             if (content.board && content.hash) {
                 setBoard(content.board)
@@ -39,7 +38,7 @@ const Room = ({location}) => {
             setSubscribed(true)
         }
         return () => {setSubscribed(false)}
-    }, [])
+    }, [joined])
 
     useEffect(()=>{
         if (subscribed) {

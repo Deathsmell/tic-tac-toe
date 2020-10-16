@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import useHttp from "../../hooks/http.hook";
 import {Redirect} from "react-router-dom"
 import {AlertContext} from "../../context/alert/AlertContext";
@@ -9,13 +9,12 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
     const alert = useContext(AlertContext);
     const showAlert = ({status, message}) => alert.show(message, alert.statusType(status))
     const [redirect, setRedirect] = useState(false);
-
     const isDeletingRoom = status => status && status.toLowerCase() === "deleting"
     const localUsername = localStorage.getItem('username');
     const isHost = host && (localUsername === host.username);
     const isOpponent = opponent && (localUsername === opponent.username);
 
-    const joinOrReconnect = () => isHost || isOpponent ? 'Reconnect' : 'Join'
+    const waitReconnect = () => !!(isHost || isOpponent)
 
 
     const joinHandler = (e) => {
@@ -30,8 +29,9 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
             .catch(showAlert)
     }
 
+
     return (
-        <div className="card"
+        <div className="card border-success"
 
         >
             {redirect && <Redirect to={`/game/${uuid}`}/>}
@@ -41,11 +41,11 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
                         <strong>Room {roomId}</strong>
                     </div>
                     <div className="">
-                        <button className="btn btn-primary rounded"
-                                disabled={isDeletingRoom()}
+                        <button className={`btn btn-${waitReconnect() ? 'info' : 'primary'} rounded`}
+                                disabled={isDeletingRoom(status) || !waitReconnect()}
                                 value={uuid}
                                 onClick={joinHandler}
-                        >{joinOrReconnect()}
+                        >{waitReconnect() ? 'Reconnect' : 'Join'}
                         </button>
                     </div>
                 </div>

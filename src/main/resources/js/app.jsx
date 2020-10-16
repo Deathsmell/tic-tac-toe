@@ -27,7 +27,7 @@ export default () => {
                 <WebSocketContext.Provider value={webSocket}>
                 <BrowserRouter>
                     {isAuthenticated && <Navbar/>}
-                    <div className={isAuthenticated ? "container pt-4" : "h-100"}>
+                    <div className={isAuthenticated ? "container pt-3" : "h-100"}>
                         <Alert/>
                         <div className={isAuthenticated ? "container pt-5" : "h-100"}>
                             {routes}

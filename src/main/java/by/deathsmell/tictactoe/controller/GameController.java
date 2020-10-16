@@ -10,6 +10,7 @@ import by.deathsmell.tictactoe.service.game.GameFacadeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,7 @@ public class GameController {
         return gameFacade.move(user,roomId, board, hash, x, y);
     }
 
-    @MessageMapping("/game/{roomId}")
+    @SubscribeMapping("/game/{roomId}")
     @SendTo("/topic/game/{roomId}")
     public GameMessageResponse startGame(@AuthenticationPrincipal User user) {
         GameMessageResponse response = new GameMessageResponse();
