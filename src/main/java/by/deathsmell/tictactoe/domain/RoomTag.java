@@ -11,9 +11,17 @@ import javax.persistence.Id;
 @Entity
 public class RoomTag {
 
+    public RoomTag() {
+
+    }
+
+    public RoomTag(String tag) {
+        this.tag = tag;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     private String tag;
 

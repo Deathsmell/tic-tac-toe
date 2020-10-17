@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useState} from 'react'
 import useHttp from "../../hooks/http.hook";
 import {Redirect} from "react-router-dom"
 import {AlertContext} from "../../context/alert/AlertContext";
@@ -42,7 +42,7 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
                     </div>
                     <div className="">
                         <button className={`btn btn-${waitReconnect() ? 'info' : 'primary'} rounded`}
-                                disabled={isDeletingRoom(status) || !waitReconnect()}
+                                disabled={isDeletingRoom(status)}
                                 value={uuid}
                                 onClick={joinHandler}
                         >{waitReconnect() ? 'Reconnect' : 'Join'}
@@ -68,7 +68,7 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
                         <h6 className="card-title">Opponent: {opponent && opponent.username || 'Unknown'} </h6>
                         <p className="card-text">
                             Tags:&nbsp;
-                            {tags && tags.map((tag, index) => {
+                            {tags && tags.map(({tag}, index) => {
                                 return (
                                     <span className="mr-1 badge badge-pill badge-primary"
                                           key={index}

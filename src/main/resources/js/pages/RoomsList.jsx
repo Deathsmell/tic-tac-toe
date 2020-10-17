@@ -18,6 +18,7 @@ const RoomsList = () => {
     useEffect(() => {
         request('/room/allRooms')
             .then((response) => {
+                console.log(response.body[0].roomTags[0])
                 !response.body ? showAlert(response) : setRooms([...response.body])
             })
             .catch(showAlert)
@@ -29,7 +30,7 @@ const RoomsList = () => {
                 roomState={roomState}
             />
             <div className="row justify-content-center">
-                {rooms.map(({id, uuid, host, opponent, tags, createdAt, status, img}, index) => {
+                {rooms.map(({id, uuid, host, opponent, roomTags, createdAt, status, img}, index) => {
                     return (
                         <div className="col-lg-4 col-md-12 col-sm-12 p-3"
                              key={index}
@@ -39,7 +40,7 @@ const RoomsList = () => {
                                 uuid={uuid}
                                 host={host}
                                 opponent={opponent}
-                                tags={tags}
+                                tags={roomTags}
                                 createdAt={createdAt}
                                 status={status}
                                 img={img}

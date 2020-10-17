@@ -2,7 +2,9 @@ package by.deathsmell.tictactoe.controller;
 
 
 import by.deathsmell.tictactoe.domain.Room;
+import by.deathsmell.tictactoe.domain.RoomTag;
 import by.deathsmell.tictactoe.domain.User;
+import by.deathsmell.tictactoe.domain.dto.RequestTags;
 import by.deathsmell.tictactoe.domain.dto.ResponseMessage;
 import by.deathsmell.tictactoe.exception.EmptySenderNameSpaceException;
 import by.deathsmell.tictactoe.exception.IllegalRoomStateException;
@@ -10,6 +12,7 @@ import by.deathsmell.tictactoe.exception.IncorrectStatusOfTheCreatedRoomExceptio
 import by.deathsmell.tictactoe.repository.RoomRepository;
 import by.deathsmell.tictactoe.service.room.RoomCreator;
 import by.deathsmell.tictactoe.service.room.RoomManager;
+import by.deathsmell.tictactoe.service.room.TagsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,18 +31,22 @@ public class RoomController {
     private final RoomRepository roomRepo;
     private final RoomCreator roomCreator;
     private final RoomManager roomManager;
+    private final TagsUtil tagsUtil;
 
 
     @Autowired
-    public RoomController(RoomRepository roomRepo, RoomCreator roomCreator, RoomManager roomManager) {
+    public RoomController(RoomRepository roomRepo, RoomCreator roomCreator, RoomManager roomManager, TagsUtil tagsUtil) {
         this.roomRepo = roomRepo;
         this.roomCreator = roomCreator;
         this.roomManager = roomManager;
+        this.tagsUtil = tagsUtil;
     }
 
     @PostMapping("/create")
-    public Room createRoom() {
-        return roomCreator.createRoom();
+    public Room createRoom(@AuthenticationPrincipal User user, @RequestBody(required = false) RequestTags tags) {
+        List<RoomTag> uniqueTags = tagsUtil.createTags(tags.getTags());
+        List<RoomTag> roomTags = tagsUtil.saveTagsOnDb(uniqueTags);
+        return roomCreator.createRoom(user,roomTags);
     }
 
     @GetMapping("/list")
@@ -57,10 +64,14 @@ public class RoomController {
         return roomRepo.findByUuid(uuid);
     }
 
+    @GetMapping("/search")
+    public List<Room> searchByTags (List<RoomTag> tags){
+        return roomRepo.findAllByRoomTagsIn(tags);
+    }
+
     @PostMapping("/join")
     public ResponseEntity<ResponseMessage> joinToRoom(@AuthenticationPrincipal User user,
                                                       @RequestParam UUID uuid) {
-        log.debug("START JOINING IN ROOM " + uuid);
         try {
             roomManager.joinToRoom(uuid, user);
         } catch (IncorrectStatusOfTheCreatedRoomException |

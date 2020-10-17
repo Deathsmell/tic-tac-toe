@@ -40,18 +40,18 @@ public class Room {
 
     private String hash;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     List<RoomTag> roomTags;
 
     public enum RoomStatus {
-        CREATED, WAITING, GAMING, DELETING,FILED
+        CREATED, WAITING, GAMING, DELETING
     }
 
-    public static RoomBuilder builder(){
+    public static RoomBuilder builder() {
         return new RoomBuilder();
     }
 
-    public static RoomBuilder withUUID(UUID uuid){
+    public static RoomBuilder withUUID(UUID uuid) {
         return builder().uuid(uuid);
     }
 
@@ -71,47 +71,47 @@ public class Room {
         }
 
         public RoomBuilder uuid(UUID uuid) {
-            Assert.notNull(uuid,"uuid cannot be null");
+            Assert.notNull(uuid, "uuid cannot be null");
             this.uuid = uuid;
             return this;
         }
 
         public RoomBuilder host(User host) {
-            Assert.notNull(host,"host cannot be null");
+            Assert.notNull(host, "host cannot be null");
             this.host = host;
             return this;
         }
 
         public RoomBuilder opponent(User opponent) {
-            Assert.notNull(opponent,"opponent cannot be null");
+            Assert.notNull(opponent, "opponent cannot be null");
             this.opponent = opponent;
             return this;
         }
 
         public RoomBuilder status(RoomStatus status) {
-            Assert.notNull(status,"status cannot be null");
+            Assert.notNull(status, "status cannot be null");
             this.status = status;
             return this;
         }
 
         public RoomBuilder createTime(LocalDateTime createdAt) {
-            Assert.notNull(createdAt,"create time cannot be null");
+            Assert.notNull(createdAt, "create time cannot be null");
             this.createdAt = createdAt;
             return this;
         }
 
-        public RoomBuilder tags(List<RoomTag> roomTags){
+        public RoomBuilder tags(List<RoomTag> roomTags) {
             this.roomTags = roomTags;
             return this;
         }
 
-        public RoomBuilder hash(String hash){
+        public RoomBuilder hash(String hash) {
             this.hash = hash;
             return this;
         }
 
-        public Room build(){
-            return new Room(id, uuid,host,opponent,createdAt,status,hash,roomTags);
+        public Room build() {
+            return new Room(id, uuid, host, opponent, createdAt, status, hash, roomTags);
         }
     }
 

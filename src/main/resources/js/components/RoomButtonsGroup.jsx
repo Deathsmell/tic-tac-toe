@@ -1,24 +1,34 @@
-import React from 'react'
+import React, {useState} from 'react'
+import Button from "react-bootstrap/Button";
+import CreateRoomModal from "./Room/CreateRoomModal";
+import SearchModal from "./Room/SearchModal";
+import Row from "react-bootstrap/Row";
 
 const RoomButtonsGroup = ({roomState}) => {
 
-    const [rooms, setRooms] = roomState;
-
-    const createHandler = async (e) => {
-        e.preventDefault()
-        const {body} = await request('/room/create', 'post');
-        setRooms([...rooms, body])
-    }
+    const [createShow, setCreateShow] = useState(false);
+    const [searchShow, setSearchShow] = useState(false);
 
     return (
-        <div className="row justify-content-center pt-2">
-            <button className="btn btn-large btn-secondary"
-                    onClick={createHandler}
-            >Create room
-            </button>
+        <div className="container">
+            <Row className="justify-content-around pt-2">
+                <Button variant="info" onClick={() => setSearchShow(true)}>
+                    Find by tag
+                </Button>
+                <Button variant="success" onClick={() => setCreateShow(true)}>
+                    Create room
+                </Button>
+                <CreateRoomModal
+                    show={createShow}
+                    onHide={() => setCreateShow(false)}
+                    roomState={roomState}
+                />
+                <SearchModal
+                    show={searchShow}
+                    onHide={() => setSearchShow(false)}
+                />
+            </Row>
         </div>
-
-
     )
 }
 

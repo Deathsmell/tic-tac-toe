@@ -1,6 +1,7 @@
 package by.deathsmell.tictactoe.service.room;
 
 import by.deathsmell.tictactoe.domain.Room;
+import by.deathsmell.tictactoe.domain.RoomTag;
 import by.deathsmell.tictactoe.domain.User;
 import by.deathsmell.tictactoe.exception.EmptySenderNameSpaceException;
 import by.deathsmell.tictactoe.exception.IllegalRoomStateException;
@@ -13,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Service
-public class RoomService implements RoomCreator,RoomManager {
+public class RoomService implements RoomCreator, RoomManager {
 
     private final RoomRepository roomRepo;
 
@@ -27,25 +29,27 @@ public class RoomService implements RoomCreator,RoomManager {
     }
 
     @Override
-    public Room createRoom() {
+    public Room createRoom(User user, List<RoomTag> tags) {
         Room newRoom = Room
                 .withUUID(UUID.randomUUID())
                 .status(Room.RoomStatus.CREATED)
                 .createTime(LocalDateTime.now())
+                .tags(tags)
+                .host(user)
                 .build();
         roomRepo.save(newRoom);
         log.info("Create new room and save in database. {}", newRoom);
         return newRoom;
     }
 
+
+
     @Override
     public void joinToRoom(@NotNull final UUID uuid, @NotNull final User user)
             throws IncorrectStatusOfTheCreatedRoomException, EmptySenderNameSpaceException, IllegalRoomStateException {
-        log.debug("Start joining into room");
         String sender = user.getUsername();
         if (null != sender) {
             Room roomFromDb = roomRepo.findByUuid(uuid);
-            log.debug("Find room in DB. Room: {}", roomFromDb);
             Room.RoomStatus roomStatus = roomFromDb.getStatus();
             if (roomStatus == Room.RoomStatus.CREATED) {
                 joinFirstPlayer(uuid, user, roomFromDb);
@@ -138,9 +142,6 @@ public class RoomService implements RoomCreator,RoomManager {
             throw new IllegalSenderAction("Player not belongs that room");
         }
     }
-
-
-
 
 
 }
