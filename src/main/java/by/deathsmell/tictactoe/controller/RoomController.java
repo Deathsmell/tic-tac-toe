@@ -65,7 +65,7 @@ public class RoomController {
     }
 
     @GetMapping("/search")
-    public List<Room> searchByTags (List<RoomTag> tags){
+    public List<Room> searchByTags (@RequestParam List<RoomTag> tags){
         return roomRepo.findAllByRoomTagsIn(tags);
     }
 

@@ -1,24 +1,47 @@
-import React, {useState} from "react";
-import ReactAutocomplete from 'react-autocomplete'
+import React, {useCallback, useEffect, useState} from "react";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import TagBadge from "../TagBadge";
 import Button from "react-bootstrap/Button";
-import {Col} from "react-bootstrap";
+import {Hint} from 'react-autocomplete-hint';
+import Popover from "react-bootstrap/Popover";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
-const SearchModal = ({onHide, show}) => {
+const SearchModal = ({onHide, show, roomState, filterState}) => {
 
     const [value, setValue] = useState('');
-    const menuStyle = {
-        borderRadius: '3px',
-        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-        background: 'rgba(255, 255, 255, 0.9)',
-        padding: '2px 0',
-        fontSize: '90%',
-        position: 'fixed',
-        overflow: 'auto',
-        maxHeight: '10%',
+    const [tags, setTags] = useState([{}]);
+    const [rooms] = roomState;
+    const [filter, setFilter] = filterState;
+
+    const pressEnterHandler = (e) => {
+        if (e.key === "Enter") {
+            addFilterHandler(e)
+        }
     }
+
+    const addFilterHandler = (e) => {
+        const value = e.target.value || e.target.getAttribute('value')
+        setFilter([...filter, ...tags.filter(({tag}) => tag === value)])
+        setValue('')
+    }
+
+    const matchFilter = useCallback(({tag}) => tag && tag.startsWith(value), [value, tags])
+
+
+    useEffect(() => {
+        const roomTags = rooms.map(({roomTags}) => [...roomTags]).flatMap(x => x.concat())
+        setTags(roomTags)
+    }, [rooms])
+
+    useEffect(() => {
+        if (tags) {
+            console.log(tags.map(({tag}) => tag))
+        } else {
+            console.log("No tags")
+        }
+    }, [tags])
 
     return (
         <Modal
@@ -34,37 +57,43 @@ const SearchModal = ({onHide, show}) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Row>
-                    <Col>
-                        <h4>Search input: </h4>
-                        <ReactAutocomplete
-                            menuStyle={menuStyle}
-                            items={[
-                                {id: 'foo', label: 'foo'},
-                                {id: 'bar', label: 'bar'},
-                                {id: 'baz', label: 'baz'},
-                            ]}
-                            shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
-                            getItemValue={item => item.label}
-                            renderItem={(item, highlighted) =>
-                                <div
-                                    key={item.id}
-                                    style={{backgroundColor: highlighted ? '#eee' : 'transparent'}}
-                                >
-                                    {item.label}
-                                </div>
-                            }
+                <Row className="justify-content-center">
+                    <h4>Search input: </h4>
+                </Row>
+                <Row className="justify-content-center mt-2">
+                    <Hint options={tags && tags.map(({tag}) => tag) || ['']}>
+                        <input
+                            id="search-filter-input"
+                            className="form-control form-control-lg"
                             value={value}
                             onChange={e => setValue(e.target.value)}
-                            onSelect={value => setValue(value)}
+                            onKeyPress={pressEnterHandler}
                         />
-                    </Col>
-                    <Col>
-                        <h4>Select tags: </h4>
-                        <Row>
-                            <TagBadge tag={"Dark"}/>
-                        </Row>
-                    </Col>
+                    </Hint>
+                    <OverlayTrigger
+                        key={'right'}
+                        placement={'right'}
+                        overlay={
+                            <Tooltip id={`tooltip-${'right'}`}>
+                                You must press enter.
+                            </Tooltip>
+                        }
+                    >
+                        <Button variant="info">Add</Button>
+                    </OverlayTrigger>
+                </Row>
+                <Row className="justify-content-center mt-2">
+                    <h4>Select tags: </h4>
+                </Row>
+                <Row className="container mt-2">
+                    {
+                        tags && tags.filter(matchFilter).map(({tag}) => (
+                                <TagBadge tag={tag}
+                                          onClick={addFilterHandler}
+                                />
+                            )
+                        )
+                    }
                 </Row>
             </Modal.Body>
             <Modal.Footer className="justify-content-between">

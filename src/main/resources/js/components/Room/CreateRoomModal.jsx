@@ -66,7 +66,6 @@ const CreateRoomModal = ({onHide, roomState, show}) => {
                 <InputGroup className="mb-3">
                     <InputGroup.Prepend>
                         <InputGroup.Text id="inputGroup-sizing-default">Tags:</InputGroup.Text>
-
                     </InputGroup.Prepend>
                     <FormControl
                         id="input"
