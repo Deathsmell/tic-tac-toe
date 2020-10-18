@@ -7,14 +7,16 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
 
     const {request} = useHttp();
     const alert = useContext(AlertContext);
-    const showAlert = ({status, message}) => alert.show(message, alert.statusType(status))
     const [redirect, setRedirect] = useState(false);
-    const isDeletingRoom = status => status && status.toLowerCase() === "deleting"
     const localUsername = localStorage.getItem('username');
+
+
     const isHost = host && (localUsername === host.username);
     const isOpponent = opponent && (localUsername === opponent.username);
-
     const waitReconnect = () => !!(isHost || isOpponent)
+    const isRoomful = () => opponent && host && !waitReconnect()
+    const isDeletingRoom = status => status && status.toLowerCase() === "deleting"
+    const showAlert = ({status, message}) => alert.show(message, alert.statusType(status))
 
 
     const joinHandler = (e) => {
@@ -42,7 +44,7 @@ const RoomCard = ({roomId, uuid, host, opponent, tags, createdAt, status, img}) 
                     </div>
                     <div className="">
                         <button className={`btn btn-${waitReconnect() ? 'info' : 'primary'} rounded`}
-                                disabled={isDeletingRoom(status)}
+                                disabled={isDeletingRoom(status) || isRoomful()}
                                 value={uuid}
                                 onClick={joinHandler}
                         >{waitReconnect() ? 'Reconnect' : 'Join'}
