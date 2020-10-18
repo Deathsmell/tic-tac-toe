@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Slf4j
@@ -44,8 +45,8 @@ public class GameFacadeService implements GameFacade {
         User host = roomFromDb.getHost();
         User opponent = roomFromDb.getOpponent();
         Room.RoomStatus status = roomFromDb.getStatus();
-
         if (status.equals(Room.RoomStatus.WAITING)) {
+            sendGameMessage(host,opponent,uuid,board,null);
             return createErrorResponse(response, "Wait you opponent");
         }
         boolean legalMove = boardUtils.isLegalMove(board, x, y);
@@ -55,9 +56,9 @@ public class GameFacadeService implements GameFacade {
             if (hashFromDB == null || hashFromDB.isBlank()) {
                 if (user.equals(host)) {
                     int[][] refreshBoard = boardManger.doMove(user, board, x, y);
-                    String refreshHash = refreshHash(hwoNextMove, refreshBoard,roomFromDb);
-                    sendGameMessage(uuid, refreshBoard, refreshHash);
-                    return createSuccessResponse(response,"Turn of " + hwoNextMove);
+                    String refreshHash = refreshHash(hwoNextMove, refreshBoard, roomFromDb);
+                    sendGameMessage(host, opponent, uuid, refreshBoard, refreshHash);
+                    return createSuccessResponse(response, "Turn of " + hwoNextMove);
                 } else {
                     return createErrorResponse(response, "Not you turn");
                 }
@@ -69,15 +70,15 @@ public class GameFacadeService implements GameFacade {
                         boolean stillMove = boardUtils.stillHaveMove(board);
                         if (stillMove) {
                             String refreshHash = refreshHash(hwoNextMove, refreshBoard, roomFromDb);
-                            sendGameMessage(uuid, refreshBoard, refreshHash);
-                            return createSuccessResponse(response,"Turn of " + hwoNextMove);
+                            sendGameMessage(host, opponent, uuid, refreshBoard, refreshHash);
+                            return createSuccessResponse(response, "Turn of " + hwoNextMove);
                         } else {
                             roomFromDb.setHash("");
                             roomRepository.save(roomFromDb);
                             return createEndGameResponse(response, null);
                         }
                     } else {
-                        sendGameMessage(uuid,board,"");
+                        sendGameMessage(host, opponent, uuid, board, "");
                         return createEndGameResponse(response, user.equals(host) ? host : opponent);
                     }
                 } else {
@@ -116,10 +117,14 @@ public class GameFacadeService implements GameFacade {
         return response;
     }
 
-    private void sendGameMessage(UUID uuid, int[][] board, String hash) {
+    private void sendGameMessage(User host, @Nullable User opponent, UUID uuid, int[][] board, @Nullable String hash) {
         GameMessageResponse response = new GameMessageResponse();
         response.setBoard(board);
         response.setHash(hash);
+        response.setHost(host.getUsername());
+        response.setOpponent(null == opponent ? null : opponent.getUsername());
+        response.setUpdated(LocalTime.now());
+        response.setHostId(host.getId());
         messageCreator.sendTo("/topic/game/" + uuid, response);
     }
 

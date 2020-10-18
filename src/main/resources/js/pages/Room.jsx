@@ -9,18 +9,25 @@ const Room = ({location}) => {
 
     const alert = useContext(AlertContext);
     const [board, setBoard] = useState([[0, 0, 0], [0, 0, 0], [0, 0, 0]]);
-    const {subscribe, addHandler,sendMessage} = useContext(WebSocketContext);
+    const [hash, setHash] = useState('')
+    const [hostId, setHostId] = useState(null)
+    const [host, setHost] = useState(null);
+    const [opponent, setOpponent] = useState(null);
+    const [updated, setUpdated] = useState(null);
+    const {subscribe, addHandler, sendMessage} = useContext(WebSocketContext);
     const [joined, setJoined] = useState(false);
     const [subscribed, setSubscribed] = useState(true);
-    const [hash, setHash] = useState('')
 
     const boardHandler = ({body}) => {
         const content = JSON.parse(body)
         if (content) {
-            if (content.board && content.hash) {
-                setBoard(content.board)
-                setHash(content.hash)
-            } else if (content.info) {
+            setBoard(content.board)
+            setHash(content.hash)
+            setHost(content.host)
+            setOpponent(content.opponent)
+            setUpdated(content.updated)
+            setHostId(content.hostId)
+            if (content.info) {
                 alert.show(content.info)
             }
         } else {
@@ -28,26 +35,27 @@ const Room = ({location}) => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(board)
-    },[board])
+    }, [board])
 
-    useEffect( () => {
+    useEffect(() => {
         if (!joined) {
             subscribe('/topic' + location.pathname);
             setSubscribed(true)
         }
-        return () => {setSubscribed(false)}
+        return () => {
+            setSubscribed(false)
+        }
     }, [joined])
 
-    useEffect(()=>{
+    useEffect(() => {
         if (subscribed) {
-            sendMessage(location.pathname,{})
-            console.log('set handler')
+            sendMessage(location.pathname, {})
             addHandler(boardHandler)
             setJoined(true)
         }
-    },[subscribed])
+    }, [subscribed])
 
 
     if (joined) {
@@ -60,10 +68,16 @@ const Room = ({location}) => {
             }}>
                 <div className="container">
                     <div className="row justify-content-center">
-                        <Board board={board}/>
+                        <Board board={board}
+                               hostId={hostId}
+                        />
                     </div>
                     <div className="row justify-content-center pt-4">
-                        <RoomInfo board={board}/>
+                        <RoomInfo board={board}
+                                  host={host}
+                                  opponent={opponent}
+                                  updated={updated}
+                        />
                     </div>
                 </div>
             </RoomContext.Provider>

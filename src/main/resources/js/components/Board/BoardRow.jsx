@@ -1,7 +1,7 @@
 import React from 'react'
 import BoardCell from "./BoardCell";
 
-const BoardRow = ({row, index}) => {
+const BoardRow = ({row, index,hostId}) => {
 
 
 
@@ -15,6 +15,7 @@ const BoardRow = ({row, index}) => {
                         indexRow={index}
                         indexCell={indexCell}
                         cell={cell}
+                        hostId={hostId}
                     />
                 )
             })}

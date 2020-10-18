@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {RoomContext} from "../../context/room/RoomContext";
 
-const RoomInfo = ({board}) => {
+const RoomInfo = ({board,host,opponent,updated}) => {
 
     const [gameStatus, setGameStatus] = useState(true);
     const {hash} = useContext(RoomContext);
@@ -18,11 +18,11 @@ const RoomInfo = ({board}) => {
         <div>
             Hash: {hash}
             <br/>
-            Host: Alex
+            Host: {host || 'none'}
             <br/>
-            Opponent: Garfield
+            Opponent: {opponent || 'none'}
             <br/>
-            Game started: 3 min ago
+            Last update: {updated || 'none'}
             <br/>
             {!gameStatus && (<strong>Game end</strong>)}
         </div>

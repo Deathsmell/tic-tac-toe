@@ -4,7 +4,7 @@ import {ImCross} from "react-icons/im";
 import useHttp from "../../hooks/http.hook";
 import {RoomContext} from "../../context/room/RoomContext";
 
-const BoardCell = ({indexRow, cell, indexCell}) => {
+const BoardCell = ({indexRow, cell, indexCell,hostId}) => {
 
     const defaultCellClass = "d-flex border-dark justify-content-center cell border"
     const cross = <FaRegCircle className="align-self-center" size="100px" row={indexRow} cell={indexCell}/>
@@ -12,6 +12,7 @@ const BoardCell = ({indexRow, cell, indexCell}) => {
 
     const {request} = useHttp();
     const {board, hash,uuid} = useContext(RoomContext);
+    const isCross = (cell,hostId) => cell === hostId ? cross : circle
 
     const cellHandler =  (e) => {
         e.preventDefault()
@@ -27,6 +28,9 @@ const BoardCell = ({indexRow, cell, indexCell}) => {
         );
     }
 
+    useEffect(()=>{
+        console.log(cell,hostId,cell === hostId);
+    },[hostId,cell])
 
     return (
         <div className={defaultCellClass}
@@ -35,7 +39,7 @@ const BoardCell = ({indexRow, cell, indexCell}) => {
              onClick={cellHandler}
         >
             {
-                cell ? cell === 3 ? cross : circle : ''
+                cell !== 0 ? isCross(cell,hostId) : ''
             }
         </div>
     )

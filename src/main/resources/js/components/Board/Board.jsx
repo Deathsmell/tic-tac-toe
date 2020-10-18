@@ -3,7 +3,7 @@ import BoardRow from "./BoardRow";
 import {RoomContext} from "../../context/room/RoomContext";
 
 
-const Board = () => {
+const Board = ({hostId}) => {
 
     const {board} = useContext(RoomContext);
 
@@ -15,6 +15,7 @@ const Board = () => {
                             <BoardRow key={`${index}-row`}
                                       row={row}
                                       index={index}
+                                      hostId={hostId}
                             />
                         )
                     }

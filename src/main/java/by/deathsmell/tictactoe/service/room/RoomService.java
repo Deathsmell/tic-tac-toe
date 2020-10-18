@@ -9,6 +9,7 @@ import by.deathsmell.tictactoe.exception.IllegalSenderAction;
 import by.deathsmell.tictactoe.exception.IncorrectStatusOfTheCreatedRoomException;
 import by.deathsmell.tictactoe.repository.RoomRepository;
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,12 @@ public class RoomService implements RoomCreator, RoomManager {
     }
 
     @Override
-    public Room createRoom(User user, List<RoomTag> tags) {
+    public Room createRoom(User user, @Nullable List<RoomTag> tags) {
         Room newRoom = Room
                 .withUUID(UUID.randomUUID())
                 .status(Room.RoomStatus.CREATED)
                 .createTime(LocalDateTime.now())
                 .tags(tags)
-                .host(user)
                 .build();
         roomRepo.save(newRoom);
         log.info("Create new room and save in database. {}", newRoom);

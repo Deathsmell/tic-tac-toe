@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import TagBadge from "../TagBadge";
 import Button from "react-bootstrap/Button";
 import {Hint} from 'react-autocomplete-hint';
-import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
