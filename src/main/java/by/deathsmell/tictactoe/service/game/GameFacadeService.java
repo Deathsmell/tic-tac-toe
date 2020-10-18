@@ -58,7 +58,7 @@ public class GameFacadeService implements GameFacade {
         if (status.equals(Room.RoomStatus.GAMING) && legalMove) {
             String hashFromDB = roomFromDb.getHash();
             User hwoNextMove = user.equals(host) ? opponent : host;
-            if (hashFromDB == null || hashFromDB.isBlank()) {
+            if (hashFromDB == null || hashFromDB.trim().isEmpty()) {
                 if (user.equals(host)) {
                     int[][] refreshBoard = boardManger.doMove(user, board, x, y);
                     String refreshHash = refreshHash(hwoNextMove, refreshBoard, roomFromDb);

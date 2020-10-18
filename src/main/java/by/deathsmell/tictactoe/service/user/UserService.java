@@ -36,7 +36,7 @@ public class UserService implements UserManager {
     }
 
     private void checkIsEmpty(String username, String password) {
-        if (username.isBlank() || password.isBlank()) {
+        if (username.trim().isEmpty() || password.trim().isEmpty()) {
             log.error("Incorrect username or password. Name : {}", username);
             throw new IllegalArgumentException("Incorrect username or password");
         }
@@ -46,7 +46,7 @@ public class UserService implements UserManager {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo
                 .findByUsername(username)
-                .orElseThrow(() -> {
+                .<UsernameNotFoundException>orElseThrow(() -> {
                     log.error("User not exist or incorrect username: {}. Please check input username", username);
                     throw new UsernameNotFoundException("Incorrect username");
                 });
