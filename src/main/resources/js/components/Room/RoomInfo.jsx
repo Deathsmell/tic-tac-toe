@@ -1,31 +1,43 @@
-import React, {useContext, useEffect, useState} from 'react'
-import {RoomContext} from "../../context/room/RoomContext";
+import React, {useEffect, useState} from 'react'
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import Row from "react-bootstrap/Row";
 
-const RoomInfo = ({board,host,opponent,updated}) => {
+const RoomInfo = ({board, host, opponent, updated}) => {
 
     const [gameStatus, setGameStatus] = useState(true);
-    const {hash} = useContext(RoomContext);
 
     useEffect(() => {
         board.forEach(row => {
             setGameStatus(() => row.includes(0))
         })
-        console.log(gameStatus)
     }, [board])
 
 
     return (
-        <div>
-            Hash: {hash}
-            <br/>
-            Host: {host || 'none'}
-            <br/>
-            Opponent: {opponent || 'none'}
-            <br/>
-            Last update: {updated || 'none'}
-            <br/>
-            {!gameStatus && (<strong>Game end</strong>)}
-        </div>
+        <Card className="border-info">
+            <Card.Body>
+                <Card.Title>Room info</Card.Title>
+                <Card.Text>
+                        Host: {host || 'none'}
+                        <br/>
+                        Opponent: {opponent || 'none'}
+                        <br/>
+                        Last update: {updated || 'none'}
+                        <br/>
+                        {!gameStatus && (<strong>Game end</strong>)}
+                </Card.Text>
+                <Row className="justify-content-between">
+                    <Button variant="danger"
+                            className="mr-3"
+
+                    >Surrender</Button>
+                    <Button variant="warning"
+                    >Back to menu</Button>
+                </Row>
+            </Card.Body>
+        </Card>
+
     )
 }
 

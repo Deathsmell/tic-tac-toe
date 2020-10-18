@@ -47,6 +47,7 @@ public class GameController {
     public GameMessageResponse startGame(@AuthenticationPrincipal User user) {
         GameMessageResponse response = new GameMessageResponse();
         response.setBoard(boardManger.createEmptyBoard());
+        response.setInfo("START GAME");
         return response;
     }
 

@@ -34,14 +34,6 @@ const SearchModal = ({onHide, show, roomState, filterState}) => {
         setTags(roomTags)
     }, [rooms])
 
-    useEffect(() => {
-        if (tags) {
-            console.log(tags.map(({tag}) => tag))
-        } else {
-            console.log("No tags")
-        }
-    }, [tags])
-
     return (
         <Modal
             onHide={onHide}
@@ -86,8 +78,9 @@ const SearchModal = ({onHide, show, roomState, filterState}) => {
                 </Row>
                 <Row className="container mt-2">
                     {
-                        tags && tags.filter(matchFilter).map(({tag}) => (
+                        tags && tags.filter(matchFilter).map(({tag},index) => (
                                 <TagBadge tag={tag}
+                                          key={index}
                                           onClick={addFilterHandler}
                                 />
                             )

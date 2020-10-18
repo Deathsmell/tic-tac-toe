@@ -1,14 +1,14 @@
 import React from "react"
-import {Route, Switch, Redirect} from "react-router-dom"
+import {Redirect, Route, Switch} from "react-router-dom"
 import AuthPage from "./pages/AuthPage"
 import Room from "./pages/Room";
 import RoomsList from "./pages/RoomsList";
-// import Test from "./pages/Test";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
         return (
             <Switch>
+                <Route path={"/test"} component={Room}/>
                 <Route path={"/game/:uuid"} component={Room} />
                 <Route path={"/list"} component={RoomsList}/>
                 <Route path="/">
