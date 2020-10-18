@@ -36,10 +36,6 @@ const Room = ({location}) => {
     }
 
     useEffect(() => {
-        console.log(board)
-    }, [board])
-
-    useEffect(() => {
         if (!joined) {
             subscribe('/topic' + location.pathname);
             setSubscribed(true)

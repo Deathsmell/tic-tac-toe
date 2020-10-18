@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import {FaRegCircle} from "react-icons/fa";
 import {ImCross} from "react-icons/im";
 import useHttp from "../../hooks/http.hook";
@@ -13,9 +13,15 @@ const BoardCell = ({indexRow, cell, indexCell, hostId}) => {
 
     const {request} = useHttp();
     const {board, hash, uuid} = useContext(RoomContext);
-    const alert = useContext(AlertContext);
+    const alert = useContext(AlertContext)
     const isCross = (cell, hostId) => cell === hostId ? cross : circle
-    const showAlert = (response) => alert.show(response.message)
+    const showAlert = (response) => {
+        const message = response.message;
+        if (message.includes("wined") || message.includes("Game end")) {
+            return alert.endGameAlert(message)
+        }
+        return alert.show(message)
+    }
 
     const cellHandler = (e) => {
         e.preventDefault()
@@ -33,10 +39,6 @@ const BoardCell = ({indexRow, cell, indexCell, hostId}) => {
             .catch(showAlert)
     }
 
-    useEffect(() => {
-        console.log(cell, hostId, cell === hostId);
-    }, [hostId, cell])
-
     return (
         <div className={defaultCellClass}
              row={indexRow}
@@ -49,5 +51,6 @@ const BoardCell = ({indexRow, cell, indexCell, hostId}) => {
         </div>
     )
 }
+
 
 export default BoardCell

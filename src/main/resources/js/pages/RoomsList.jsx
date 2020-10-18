@@ -5,6 +5,7 @@ import {AlertContext} from "../context/alert/AlertContext";
 import RoomButtonsGroup from "../components/RoomButtonsGroup";
 import Row from "react-bootstrap/Row";
 import TagBadge from "../components/TagBadge";
+import {onlyUniqueTag} from "../utils/tag";
 
 const RoomsList = () => {
 
@@ -38,11 +39,12 @@ const RoomsList = () => {
         }
     },[filter])
 
+
+
     useEffect(() => {
         request('/room/allRooms')
             .then((response) => {
-                console.log(response.body[0].roomTags[0])
-                !response.body ? showAlert(response) : setRooms([...response.body])
+                response.body ? setRooms([...response.body]) : response ? showAlert(response) : ''
             })
             .catch(showAlert)
     }, [])
@@ -55,7 +57,7 @@ const RoomsList = () => {
             />
             {filter && filter.length !== 0 &&
             <Row className="justify-content-center mt-2">
-                {filter.map(({tag}, index) => <TagBadge key={index} tag={tag} cross
+                {filter.filter(onlyUniqueTag).map(({tag}, index) => <TagBadge key={index} tag={tag} cross
                                                         onDelete={deleteHandler}/>)}
             </Row>
             }

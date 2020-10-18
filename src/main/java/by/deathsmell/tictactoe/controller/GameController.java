@@ -42,6 +42,14 @@ public class GameController {
         return gameFacade.move(user,roomId, board, hash, x, y);
     }
 
+    @PostMapping("/room/{roomId}/surrender")
+    public ResponseMessage sendMessageInPublicChat(@AuthenticationPrincipal User user,
+                                                   @PathVariable UUID roomId) {
+        return gameFacade.surrender(user,roomId);
+    }
+
+
+
     @SubscribeMapping("/game/{roomId}")
     @SendTo("/topic/game/{roomId}")
     public GameMessageResponse startGame(@AuthenticationPrincipal User user) {

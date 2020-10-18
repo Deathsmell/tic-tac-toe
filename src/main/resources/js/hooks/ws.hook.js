@@ -4,15 +4,24 @@ import {useEffect, useState} from "react";
 
 const useWebSocket = (isAuthenticated) => {
 
-    const [stompClient,setStompClient] = useState(null)
+    const [stompClient, setStompClient] = useState(null)
+    const [hasConnect, setHasConnect] = useState(false)
     let handlers = []
 
     useEffect(() => {
         if (isAuthenticated) connect()
     }, [isAuthenticated])
 
+    useEffect(() => {
+        if (stompClient) {
+            setTimeout(() => setHasConnect(true), 1000)
+        } else {
+            setHasConnect(false)
+        }
+    }, [stompClient])
+
     const connect = () => {
-        const stomp = Stomp.over(new SockJS('/game'));
+        const stomp = Stomp.over(new SockJS('/game-tic-tac-toe'));
         stomp.connect(localStorage.getItem('username'), frame => console.log(frame))
         setStompClient(stomp)
     }
@@ -21,21 +30,21 @@ const useWebSocket = (isAuthenticated) => {
 
     const responseHandler = (iMassage) => {
         handlers.forEach(handler => {
-            console.log("HANDLER: ",iMassage,handler)
+            console.log("HANDLER: ", iMassage, handler)
             handler(iMassage)
         })
     }
 
     const subscribe = (topic) => {
         console.log(stompClient, 'sub')
-        if (stompClient) {
+        if (hasConnect) {
             return stompClient.subscribe(topic, responseHandler);
         }
     }
 
-    const sendMessage = (to,message = "") => {
-        message = typeof message === "string" ? "" :  JSON.stringify(message)
-        stompClient.send(`/app${to}`, {},message)
+    const sendMessage = (to, message = "") => {
+        message = typeof message === "string" ? "" : JSON.stringify(message)
+        stompClient.send(`/app${to}`, {}, message)
     }
 
     const disconnect = () => {
@@ -47,7 +56,7 @@ const useWebSocket = (isAuthenticated) => {
         }
     }
 
-    return {connect,disconnect, subscribe, sendMessage, addHandler}
+    return {connect, disconnect, subscribe, sendMessage, addHandler, hasConnect}
 }
 
 export default useWebSocket

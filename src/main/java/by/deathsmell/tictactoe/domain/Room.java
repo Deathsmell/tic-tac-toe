@@ -40,7 +40,7 @@ public class Room {
 
     private String hash;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     List<RoomTag> roomTags;
 
     public enum RoomStatus {

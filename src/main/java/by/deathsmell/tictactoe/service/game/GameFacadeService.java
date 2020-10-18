@@ -28,7 +28,8 @@ public class GameFacadeService implements GameFacade {
     public GameFacadeService(BoardUtils boardUtils,
                              BoardManger boardManger,
                              BoardEncoder boardEncoder,
-                             RoomRepository roomRepository, MessageCreator messageCreator) {
+                             RoomRepository roomRepository,
+                             MessageCreator messageCreator) {
         this.boardUtils = boardUtils;
         this.boardManger = boardManger;
         this.boardEncoder = boardEncoder;
@@ -45,8 +46,12 @@ public class GameFacadeService implements GameFacade {
         User host = roomFromDb.getHost();
         User opponent = roomFromDb.getOpponent();
         Room.RoomStatus status = roomFromDb.getStatus();
-        if (status.equals(Room.RoomStatus.WAITING)) {
+        if (status.equals(Room.RoomStatus.DELETING)){
             sendGameMessage(host,opponent,uuid,board,null);
+            return createErrorResponse(response,"Game ended!");
+        }
+        if (status.equals(Room.RoomStatus.WAITING)) {
+            sendGameMessage(host, opponent, uuid, board, null);
             return createErrorResponse(response, "Wait you opponent");
         }
         boolean legalMove = boardUtils.isLegalMove(board, x, y);
@@ -58,7 +63,7 @@ public class GameFacadeService implements GameFacade {
                     int[][] refreshBoard = boardManger.doMove(user, board, x, y);
                     String refreshHash = refreshHash(hwoNextMove, refreshBoard, roomFromDb);
                     sendGameMessage(host, opponent, uuid, refreshBoard, refreshHash);
-                    return createSuccessResponse(response, "Turn of " + hwoNextMove);
+                    return createSuccessResponse(response, "Turn of " + hwoNextMove.getUsername());
                 } else {
                     return createErrorResponse(response, "Not you turn");
                 }
@@ -71,13 +76,13 @@ public class GameFacadeService implements GameFacade {
                         if (stillMove) {
                             String refreshHash = refreshHash(hwoNextMove, refreshBoard, roomFromDb);
                             sendGameMessage(host, opponent, uuid, refreshBoard, refreshHash);
-                            return createSuccessResponse(response, "Turn of " + hwoNextMove);
+                            return createSuccessResponse(response, "Turn of " + hwoNextMove.getUsername());
                         } else {
-                            roomFromDb.setHash("");
-                            roomRepository.save(roomFromDb);
+                            setRoomStatusDelete(roomFromDb);
                             return createEndGameResponse(response, null);
                         }
                     } else {
+                        setRoomStatusDelete(roomFromDb);
                         sendGameMessage(host, opponent, uuid, board, "");
                         return createEndGameResponse(response, user.equals(host) ? host : opponent);
                     }
@@ -86,6 +91,20 @@ public class GameFacadeService implements GameFacade {
                 }
             }
         }
+        return response;
+    }
+
+    private void setRoomStatusDelete(Room roomFromDb) {
+        roomFromDb.setHash("");
+        roomFromDb.setStatus(Room.RoomStatus.DELETING);
+        roomRepository.save(roomFromDb);
+    }
+
+    public ResponseMessage surrender(User user, UUID uuid) {
+        ResponseMessage response = new ResponseMessage();
+        Room byUuid = roomRepository.findByUuid(uuid);
+        setRoomStatusDelete(byUuid);
+        response.setMessage(user.getUsername() + " surrendered.");
         return response;
     }
 

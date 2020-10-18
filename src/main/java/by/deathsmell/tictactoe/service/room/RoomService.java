@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -57,10 +58,6 @@ public class RoomService implements RoomCreator, RoomManager {
                 boolean notNeedReconnect = !user.equals(roomFromDb.getHost()) && !user.equals(roomFromDb.getOpponent());
                 if (notNeedReconnect)
                     joinSecondPlayer(user, roomFromDb);
-            } else {
-                String msg = "While joining to room a room status be or become illegal";
-                log.error(msg);
-                throw new IllegalRoomStateException(msg);
             }
         } else {
             String une = "User name empty";
@@ -123,6 +120,12 @@ public class RoomService implements RoomCreator, RoomManager {
             log.error("Not found room in DB. Room not exist or input value illegal or incorrect");
             throw new IllegalArgumentException("Not found room in DB. Room not exist or input value illegal or incorrect");
         }
+    }
+
+    @Override
+    @Transactional
+    public void roomDestroy(Room.RoomStatus status) {
+        roomRepo.deleteAllByStatus(status);
     }
 
     private void checkDuplicateUserSlots(String username, boolean hasHost, boolean hasOpponent) {

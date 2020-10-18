@@ -13,6 +13,8 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     Room findByUuid(UUID uuid);
 
     List<Room> findAllByRoomTagsIn (Iterable<RoomTag> tags);
+    List<Room> findAllByStatus (Room.RoomStatus status);
+    void deleteAllByStatus (Room.RoomStatus status);
 
     @Query("select r from Room r where r.host = :username or r.opponent = :username")
     Room findRoomByHostOrOpponent(@Param("username") String username);

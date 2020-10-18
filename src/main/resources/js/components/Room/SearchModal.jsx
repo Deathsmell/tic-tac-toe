@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import {Hint} from 'react-autocomplete-hint';
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import {onlyUniqueTag} from "../../utils/tag";
 
 const SearchModal = ({onHide, show, roomState, filterState}) => {
 
@@ -78,7 +79,7 @@ const SearchModal = ({onHide, show, roomState, filterState}) => {
                 </Row>
                 <Row className="container mt-2">
                     {
-                        tags && tags.filter(matchFilter).map(({tag},index) => (
+                        tags && tags.filter(matchFilter).filter(onlyUniqueTag).map(({tag},index) => (
                                 <TagBadge tag={tag}
                                           key={index}
                                           onClick={addFilterHandler}
