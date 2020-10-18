@@ -2,11 +2,12 @@ plugins {
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+    id "com.github.node-gradle.node" version "2.2.4"
 }
 
 group = 'by.deathsmell'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '1.8'
 
 configurations {
     compileOnly {
@@ -40,4 +41,17 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+
+task taskFront(type: YarnTask) {
+    args = ['build']
+}
+yarn_install.dependsOn(yarn_cache_clean)
+taskFront.dependsOn(yarn_install)
+processResources.dependsOn(taskFront)
+
+
+node {
+    download = true
 }

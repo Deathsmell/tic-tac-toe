@@ -6,13 +6,15 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/tictactoe
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/tictactoe}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: true
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
     hibernate:
       ddl-auto: create
     properties:
-      hibernate.format_sql: true
+      hibernate.format_sql: false
